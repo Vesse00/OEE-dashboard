@@ -7,7 +7,10 @@ import { useStore } from './store/useStore';
 import { Layout } from './components/Layout';
 import { MachineCard } from './components/MachineCard';
 import { MachineDetails } from './components/MachineDetails';
-import { KpiStats } from './components/KpiStats'; // <--- IMPORT
+import { KpiStats } from './components/KpiStats';
+import { Analytics } from './components/Analytics';
+import { Settings } from './components/Settings';
+import { Toaster } from 'react-hot-toast';
 
 const Dashboard = () => {
   const { machines, isRunning, toggleSimulation } = useStore();
@@ -25,22 +28,23 @@ const Dashboard = () => {
 
   return (
     <div>
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+      {/* Header Dashboardu - WERSJA MOBILE FIX */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
         <div>
           <h1 className="text-3xl font-bold text-white tracking-tight">Factory Overview</h1>
           <p className="text-slate-400 mt-1">Real-time monitoring system</p>
         </div>
         
-        <div className="flex items-center gap-4">
-          {/* Filtry */}
-          <div className="flex bg-slate-800/50 p-1 rounded-xl border border-white/5">
+        {/* Kontener przycisków - na mobile: pełna szerokość, space-between */}
+        <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+          {/* Filtry - na mobile rozciągnięte */}
+          <div className="flex bg-slate-800/50 p-1 rounded-xl border border-white/5 flex-1 lg:flex-none justify-center lg:justify-start">
             {(['all', 'running', 'error'] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 className={clsx(
-                  "px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all",
+                  "flex-1 lg:flex-none px-3 sm:px-4 py-1.5 rounded-lg text-[10px] sm:text-xs font-bold uppercase tracking-wider transition-all text-center",
                   filter === f 
                     ? "bg-indigo-600 text-white shadow-lg" 
                     : "text-slate-400 hover:text-slate-200"
@@ -51,16 +55,19 @@ const Dashboard = () => {
             ))}
           </div>
 
+          {/* Przycisk Symulacji - na mobile tylko ikona */}
           <button 
             onClick={toggleSimulation}
             className={clsx(
-              "flex items-center gap-2 px-6 py-2 rounded-xl font-bold transition-all shadow-lg active:scale-95 border",
+              "flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-bold transition-all shadow-lg active:scale-95 border",
               isRunning 
                 ? "bg-amber-500/10 text-amber-500 border-amber-500/50 hover:bg-amber-500/20"
                 : "bg-indigo-600 text-white border-indigo-500 hover:bg-indigo-700 hover:shadow-indigo-500/25"
             )}
+            title={isRunning ? "Pause Simulation" : "Start Simulation"}
           >
             {isRunning ? <Pause size={20} /> : <Play size={20} />}
+            {/* Tekst ukryty na mobile (hidden), widoczny od sm (sm:inline) */}
             <span className="hidden sm:inline">{isRunning ? "PAUSE" : "START"}</span>
           </button>
         </div>
@@ -125,13 +132,14 @@ function App() {
 
   return (
     <BrowserRouter>
+    <Toaster position="top-center" reverseOrder={false} />
       <Layout>
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/machines" element={<Dashboard />} />
           <Route path="/machines/:id" element={<MachineDetails />} />
-          <Route path="/analytics" element={<PlaceholderPage title="Advanced Analytics" />} />
-          <Route path="/settings" element={<PlaceholderPage title="System Configuration" />} />
+          <Route path="/analytics" element={<Analytics />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Layout>

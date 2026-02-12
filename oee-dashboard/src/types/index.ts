@@ -6,26 +6,37 @@ export interface Machine {
   status: MachineStatus;
   
   // Dane produkcyjne
-  targetProduction: number; // Cel na godzinę
-  actualProduction: number; // Aktualnie wyprodukowane
-  rejects: number;          // Odrzuty (braki)
+  targetProduction: number;
+  actualProduction: number;
+  rejects: number;
   
-  // Wskaźniki OEE (0-100%)
+  // Wskaźniki OEE
   availability: number;
   performance: number;
   quality: number;
   oee: number;
   
-  // Do wykresu (historia z ostatnich np. 20 cykli pomiarowych)
+  // Historia
   history: {
     timestamp: string;
     oee: number;
   }[];
 }
 
+// Nowy interfejs dla ustawień
+export interface AppSettings {
+  notifications: boolean;
+  soundEnabled: boolean;
+  refreshRate: number;
+}
+
 export interface FactoryState {
   machines: Machine[];
   isRunning: boolean;
+  settings: AppSettings; // <--- Dodajemy ustawienia do stanu
+  
   toggleSimulation: () => void;
-  updateMachines: () => void; // Funkcja "tick" wywoływana co interwał
+  updateMachines: () => void;
+  toggleNotifications: () => void; // <--- Akcja do przełączania
+  setRefreshRate: (rate: number) => void;
 }
