@@ -1,69 +1,86 @@
 # 🏭 Industrial OEE Dashboard
 
-![Project Status](https://img.shields.io/aur/last-modified/:OEE-dashboard)
+![Project Status](https://img.shields.io/badge/Status-Live-success)
 ![Tech Stack](https://img.shields.io/badge/Stack-React_|_TypeScript_|_Tailwind-blue)
 
-> **Live Demo:** 
+> **Live Demo:** [[GitHub Pages]](https://vesse00.github.io/OEE-dashboard/)
 
-A modern, real-time industrial monitoring system built to visualize **Overall Equipment Effectiveness (OEE)** metrics. This project simulates a high-frequency production environment with live data updates, stochastic failure generation, and interactive analytics.
+A cutting-edge, real-time industrial monitoring system designed to visualize **Overall Equipment Effectiveness (OEE)** metrics. This Single Page Application (SPA) simulates a high-frequency production environment with live data streaming, stochastic failure generation, and interactive analytics.
 
-![Dashboard Preview](./screenshot.png)
+![Dashboard Preview](/screenshot.png)
 
 ## 🚀 Key Features
 
-* **Real-Time Simulation Engine:** Custom-built stochastic generator (Random Walk algorithm) that mimics realistic machine behavior, including inertia, micro-stops, and critical failures.
-* **Live OEE Calculation:** Automatic computation of Availability × Performance × Quality metrics in real-time.
-* **Reactive UI:**
-    * **Glassmorphism & Neon Design:** Aesthetic "Dark Hero" interface inspired by modern SaaS industrial tools.
-    * **Smart Filtering:** Instantly filter machines by status (Running/Error) with animated transitions.
-    * **Data Visualization:** Sparkline charts rendering live trends using `Recharts`.
-* **Performance:** Optimized rendering using `Zustand` for state management and `Framer Motion` for layout animations without layout thrashing.
+### 1. Real-Time Simulation Engine 🧠
+Instead of static data, the application runs a custom-built stochastic simulator (`useStore.ts`):
+* **Random Walk Algorithm:** OEE values "drift" naturally over time rather than jumping randomly, mimicking real sensor inertia.
+* **"Chaos Monkey" System:** Probabilistic model randomly triggers **warnings** (e.g., overheating) and **critical failures** (e.g., stops), forcing the UI to react instantly.
+* **Self-Healing:** Machines have a small probability of auto-recovery, simulating operator intervention.
+
+### 2. Interactive Operator Dashboard 🎛️
+* **Live Status Monitoring:** Instant visualization of machine states (Running/Warning/Error) with neon-glassmorphism UI.
+* **Smart Filtering:** Filter production lines by status with fluid layout animations (powered by `Framer Motion`).
+* **Critical Alerts:** Real-time "Toast" notifications (via `react-hot-toast`) when a machine goes down or recovers.
+
+### 3. Deep-Dive Analytics 📊
+* **Machine Drill-Down:** Click on any machine to see detailed diagnostics, including specific defect reasons (Pareto charts) and weekly output history.
+* **Global Analytics:** System-wide analysis of Quality (OK/NOK ratios) and Reliability KPIs (MTBF, MTTR).
+* **Dynamic Charts:** High-performance rendering of sparklines and area charts using `Recharts`.
+
+### 4. System Configuration ⚙️
+* **Settings Panel:** Toggle notifications, adjust data refresh rates, or pause the simulation entirely.
+* **Global State Management:** All preferences and machine states are synchronized globally using `Zustand`.
 
 ## 🛠️ Tech Stack
 
-This project was built with a focus on **performance**, **type safety**, and **modern aesthetics**.
+Built with performance, type safety, and modern aesthetics in mind.
 
 | Category | Technology | Usage |
 | :--- | :--- | :--- |
-| **Core** | ![React](https://img.shields.io/badge/-React_18-61DAFB?logo=react&logoColor=black) ![Vite](https://img.shields.io/badge/-Vite-646CFF?logo=vite&logoColor=white) | Component architecture & blazing fast bundling. |
-| **Language** | ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white) | Fully typed interfaces for robust data handling. |
-| **Styling** | ![Tailwind CSS](https://img.shields.io/badge/-Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white) | Utility-first styling with custom animations and glassmorphism. |
-| **State** | **Zustand** | Lightweight, transient-update state management for high-frequency data. |
-| **Charts** | **Recharts** | Composable charting library for React. |
-| **Motion** | **Framer Motion** | Complex layout animations and micro-interactions. |
+| **Core** | ![React](https://img.shields.io/badge/-React_18-61DAFB?logo=react&logoColor=black) ![Vite](https://img.shields.io/badge/-Vite-646CFF?logo=vite&logoColor=white) | Component architecture & fast bundling. |
+| **Language** | ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white) | Fully typed interfaces for robust data flow. |
+| **Styling** | ![Tailwind CSS](https://img.shields.io/badge/-Tailwind_CSS-38B2AC?logo=tailwind-css&logoColor=white) | Utility-first styling with `clsx` and responsive design. |
+| **State** | **Zustand** | Lightweight state management for high-frequency updates. |
+| **Charts** | **Recharts** | Composable charting library for complex data visualization. |
+| **Animation** | **Framer Motion** | Layout transitions and micro-interactions. |
+| **UX** | **React Hot Toast** | Non-intrusive system notifications. |
+| **Icons** | **Lucide React** | Consistent and clean iconography. |
 
-## 🧩 Architecture Highlights
+### 📂 Project Structure
 
-### The Simulation Engine (`useStore.ts`)
-Instead of a simple `Math.random()`, the simulator uses a **drifting algorithm** to ensure data continuity.
-1.  **Inertia:** Values don't jump from 0 to 100; they "drift" naturally based on previous states.
-2.  **Chaos Monkey:** A probabilistic model randomly triggers "warnings" and "critical errors" to test the UI's response to alert states.
-3.  **Self-Healing:** Machines have a probability to auto-recover, simulating operator intervention.
-
-### Component Structure
-* **`Layout`**: Handles the responsive Sidebar and global "Hero" background effects.
-* **`MachineCard`**: A stateless presentation component that visualizes complex data sets (Sparklines, Progress Bars) with dynamic "Glow" effects based on machine status.
-
-## 📦 Getting Started
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/your-username/oee-dashboard.git](https://github.com/your-username/oee-dashboard.git)
-    ```
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-3.  **Run development server:**
-    ```bash
-    npm run dev
-    ```
+```bash
+src/
+├── components/
+│   ├── Layout.tsx        # Global shell with Sidebar & Glassmorphism BG
+│   ├── MachineCard.tsx   # Real-time widget with Sparklines
+│   ├── MachineDetails.tsx# Drill-down view with specific diagnostics
+│   ├── Analytics.tsx     # Global KPI dashboard
+│   ├── Settings.tsx      # Configuration panel
+│   └── KpiStats.tsx      # Top-level metric cards
+├── store/
+│   └── useStore.ts       # The "Brain": Simulation logic & State
+├── types/
+│   └── index.ts          # TypeScript interfaces
+└── App.tsx               # Routing & Main Composition
+```
+### 📦 Getting Started
+1. Clone the repository:
+   ```
+   git clone [https://github.com/vesse00/oee-dashboard.git](https://github.com/vesse00/oee-dashboard.git)
+   ```
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Run development server:
+   ```
+   npm run dev
+   ```
 
 ## 🎨 Design Philosophy
+* The UI moves away from traditional, flat corporate dashboards to a "Dark Industrial" aesthetic:
+* Palette: Deep Slate (#0f172a) background with semantic neons (Emerald, Rose, Amber).
+* Hierarchy: Critical data (Status, OEE %) is prioritized visually.
+* Feedback: Interactive hover states and animations provide a tactile feel.
 
-The goal was to move away from "boring corporate dashboards" and create an interface that feels **precise, futuristic, and engaging**.
-* **Color Palette:** Deep Slate background (`#0f172a`) with semantic neons: Emerald (Running), Rose (Error), Amber (Warning).
-* **Visual Hierarchy:** Critical data (OEE %) is prioritized. Sparklines provide context without clutter.
-
----
-*Created by Maciej Szczypta - 2026*
+Created by Maciej Szczypta - 2026
