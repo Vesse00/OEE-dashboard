@@ -1,7 +1,6 @@
 # 🏭 Industrial OEE Dashboard
 
-![Project Status]([https://img.shields.io/badge/Status](https://img.shields.io/aur/last-modified/:packageName
-)-)
+![Project Status](https://img.shields.io/aur/last-modified/:packageName)
 ![Tech Stack](https://img.shields.io/badge/Stack-React_|_TypeScript_|_Tailwind-blue)
 
 > **Live Demo:** 
